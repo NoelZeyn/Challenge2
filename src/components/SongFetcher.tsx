@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import SongList from "@/components/SongList";
 import SongDetails from "@/components/SongDetails";
 
@@ -15,12 +14,17 @@ type Song = {
 export default function SongFetcher() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-
   useEffect(() => {
     const fetchSongs = async () => {
-      const { data, error } = await supabase.from("songs").select("*");
-      if (error) console.error(error);
-      else setSongs(data as Song[]);
+      try {
+        const response = await fetch("/api/songs");
+        if (!response.ok) throw new Error("Failed to fetch songs");
+
+        const result = await response.json();
+        setSongs(result.data);
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+      }
     };
 
     fetchSongs();
@@ -29,7 +33,11 @@ export default function SongFetcher() {
   return (
     <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-4">
       <div className="md:col-span-4">
-        <SongList songs={songs} onSelectSong={setSelectedSong} selectedSongId={selectedSong?.id} />
+        <SongList
+          songs={songs}
+          onSelectSong={setSelectedSong}
+          selectedSongId={selectedSong?.id}
+        />
       </div>
       
       {/* Song Details 70% */}

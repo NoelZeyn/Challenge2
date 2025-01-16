@@ -13,7 +13,7 @@ export default function Navbar() {
             Home
           </Link>
           <Link
-            href="/Sign-in"
+            href="/Login"
             className="text-gray-600 hover:text-teal-500 transition-colors"
           >
             Sign In
