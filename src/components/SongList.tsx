@@ -4,6 +4,7 @@ type Song = {
     artist: string;
     album: string;
     url: string;
+    url_yt: string;
   };
   
   export default function SongList({

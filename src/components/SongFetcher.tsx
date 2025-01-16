@@ -9,6 +9,7 @@ type Song = {
   artist: string;
   album: string;
   url: string;
+  url_yt: string;
 };
 
 export default function SongFetcher() {
@@ -27,7 +28,6 @@ export default function SongFetcher() {
 
   return (
     <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-4">
-      {/* Song List 30% */}
       <div className="md:col-span-4">
         <SongList songs={songs} onSelectSong={setSelectedSong} selectedSongId={selectedSong?.id} />
       </div>
