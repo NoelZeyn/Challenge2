@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     try {
-      const { data, error } = await supabase.from("songs").select("*");
+      const { data, error } = await supabase.from("users").select("*");
 
       if (error) throw new Error(error.message);
 
