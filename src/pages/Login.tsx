@@ -94,7 +94,7 @@ export default function Login() {
                 Login
               </button>
               <Link
-                href="/register"
+                href="/Register"
                 className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 transform transition-all duration-300 hover:scale-105"
               >
                 Don&apos;t have an account? Register
