@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     try {
-      const { data, error } = await supabase.from("users").select("id, username, email, role");
+      const { data, error } = await supabase.from("users").select("*");
 
       if (error) throw new Error(error.message);
 
@@ -23,4 +23,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     success: false,
     message: `Method ${req.method} not allowed.`,
   });
+  
 }
