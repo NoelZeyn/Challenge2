@@ -17,7 +17,7 @@ export async function validateAdminRole(): Promise<void> {
   
   export async function fetchTabData(activeTab: string): Promise<any[]> {
     let endpoint = "";
-    if (activeTab === "log") endpoint = "/api/auth/logs";
+    if (activeTab === "log") endpoint = "/api/logs";
     if (activeTab === "users") endpoint = "/api/users";
     if (activeTab === "songs") endpoint = "/api/songs";
   
@@ -37,11 +37,11 @@ export async function validateAdminRole(): Promise<void> {
       dataKey: ["id", "username", "email", "role"],
     },
     songs: {
-      headers: ["Title", "Artist", "Album", "URL", "YouTube URL", "Action"],
+      headers: ["Title", "Artist", "Album", "URL", "YouTube URL"],
       dataKey: ["title", "artist", "album", "url", "url_yt"],
     },
     log: {
-      headers: ["Admin", "Action", "Target", "Timestamp", "Action"],
+      headers: ["Admin", "Action", "Target", "Timestamp"],
       dataKey: ["admin_id", "action", "target", "timestamp"],
     },
   };
