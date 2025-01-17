@@ -12,29 +12,32 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
-
+  
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const result = await response.json();
-
+  
       if (!response.ok) throw new Error(result.message);
-
-      // Redirect based on role
+  
+      // Simpan userId di localStorage
+      localStorage.setItem("userId", result.user.id);
+  
+      // Redirect berdasarkan role
       if (result.user.role === "admin") {
-        window.location.href = "/admin-dashboard";
+        window.location.href = "/adminDashboard";
       } else {
-        window.location.href = "/user-dashboard";
+        window.location.href = "/userDashboard";
       }
     } catch (error: any) {
       setErrorMessage(error.message || "An error occurred during login");
     }
   };
-
+  
   return (
     <div className="bg-gradient-to-b from-teal-100 via-blue-50 to-blue-100 min-h-screen flex flex-col">
       <Navbar />
