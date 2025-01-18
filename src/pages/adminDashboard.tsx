@@ -6,7 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import Header from "@/components/HeaderAdmin";
 import UserForm from "@/components/UserForm";
 import { validateAdminRole, fetchTabData, tableConfig } from "@/utils/adminHelpers";
-
+import '../styles/globals.css'
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [loading, setLoading] = useState(true);
