@@ -17,23 +17,30 @@ export async function validateAdminRole(): Promise<void> {
   
   export async function fetchTabData(activeTab: string): Promise<any[]> {
     let endpoint = "";
-    if (activeTab === "log") endpoint = "/api/logs";
-    if (activeTab === "users") endpoint = "/api/users";
-    if (activeTab === "songs") endpoint = "/api/songs";
+    if (activeTab === "log") endpoint = "/api/auth/logs";
+    if (activeTab === "users") endpoint = "/api/auth/users";
+    if (activeTab === "songs") endpoint = "/api/auth/songs";
   
     if (!endpoint) return [];
   
-    const response = await fetch(endpoint);
-    const result = await response.json();
+    try {
+      const response = await fetch(endpoint);
+      const result = await response.json();
   
-    if (!response.ok) throw new Error(`Failed to fetch ${activeTab} data`);
-    return result.data || result.logs || [];
+      if (!response.ok) throw new Error(result.message || `Failed to fetch ${activeTab} data`);
+  
+      return result.data || result.logs || [];
+    } catch (error) {
+      console.error(`Error fetching data for ${activeTab}:`, error);
+      return []; // Return an empty array on failure
+    }
   }
+  
 
   
   export const tableConfig: Record<string, { headers: string[]; dataKey: string[] }> = {
     users: {
-      headers: ["ID", "Username", "Email", "Role", "Action"],
+      headers: ["ID", "Username", "Email", "Role"],
       dataKey: ["id", "username", "email", "role"],
     },
     songs: {
@@ -45,3 +52,4 @@ export async function validateAdminRole(): Promise<void> {
       dataKey: ["admin_id", "action", "target", "timestamp"],
     },
   };
+  

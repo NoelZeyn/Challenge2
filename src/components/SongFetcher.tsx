@@ -17,7 +17,7 @@ export default function SongFetcher() {
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const response = await fetch("/api/songs");
+        const response = await fetch("/api/auth/songs");
         if (!response.ok) throw new Error("Failed to fetch songs");
 
         const result = await response.json();

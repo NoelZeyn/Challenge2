@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (error) throw new Error(error.message);
         if (!data || data.length === 0) {
-          return res.status(404).json({ success: false, message: "Song not found" });
+          return res.status(404).json({ success: false, message: "User not found" });
         }
 
         return res.status(200).json({ success: true, data });
@@ -51,10 +51,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (error) throw new Error(error.message);
         if (!data || data.length === 0) {
-          return res.status(404).json({ success: false, message: "Song not found" });
+          return res.status(404).json({ success: false, message: "User not found" });
         }
 
-        return res.status(200).json({ success: true, message: "Song deleted successfully" });
+        return res.status(200).json({ success: true, message: "User deleted successfully" });
       } catch (error) {
         return res.status(500).json({ success: false, message: error instanceof Error ? error.message : "Unknown error" });
       }

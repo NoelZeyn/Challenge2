@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+// pages/adminDashboard.tsx
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Sidebar from "@/components/Sidebar";
+import Header from "@/components/HeaderAdmin";
+import UserForm from "@/components/UserForm";
 import { validateAdminRole, fetchTabData, tableConfig } from "@/utils/adminHelpers";
-import "../styles/globals.css";
 
-export default function AdminDashboard() {
+const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -32,6 +35,19 @@ export default function AdminDashboard() {
         .catch((error) => console.error(`Failed to fetch ${activeTab} data:`, error));
     }
   }, [activeTab]);
+
+  const handleUserInsert = async (formData: { username: string; email: string; password: string }) => {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message);
+
+    setData([...data, result.data]);
+  };
 
   if (loading) return <p className="text-center mt-20 text-lg font-semibold">Loading...</p>;
   if (errorMessage) return <p className="text-center mt-20 text-red-500 text-lg font-semibold">{errorMessage}</p>;
@@ -78,45 +94,14 @@ export default function AdminDashboard() {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col lg:flex-row">
-      {/* Sidebar */}
-      <aside className="w-full lg:w-64 bg-blue-800 text-white h-auto lg:h-screen shadow-lg">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-center lg:text-left">Admin ERP</h2>
-        </div>
-        <nav className="mt-4">
-          <ul className="flex lg:block overflow-x-auto whitespace-nowrap">
-            {["dashboard", "users", "songs", "log"].map((tab) => (
-              <li
-                key={tab}
-                className={`p-4 text-center lg:text-left hover:bg-blue-700 cursor-pointer ${
-                  activeTab === tab ? "bg-blue-700" : ""
-                }`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </aside>
-
-      {/* Main Content */}
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="flex-1 p-4">
-        <header className="flex flex-col lg:flex-row justify-between items-center bg-white shadow p-4 rounded-md">
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-700">Welcome, Admin</h1>
-          <button
-            onClick={() => {
-              localStorage.removeItem("userId");
-              router.push("/Login");
-            }}
-            className="mt-4 lg:mt-0 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
-          >
-            Logout
-          </button>
-        </header>
-
-        <div className="mt-6 bg-white shadow p-4 rounded-md">{renderTable()}</div>
+        <Header />
+        {activeTab === "users" && <UserForm onSubmit={handleUserInsert} />}
+        {renderTable()}
       </main>
     </div>
   );
-}
+};
+
+export default AdminDashboard;
