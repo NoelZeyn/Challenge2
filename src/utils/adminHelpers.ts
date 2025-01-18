@@ -51,8 +51,8 @@ export const tableConfig: Record<string, { headers: string[]; dataKey: string[] 
     dataKey: ["id", "username", "email", "role"],
   },
   songs: {
-    headers: ["Title", "Artist", "Album", "URL", "YouTube URL"],
-    dataKey: ["title", "artist", "album", "url", "url_yt"],
+    headers: ["Title", "Artist", "Album", "Genre", "URL", "YouTube URL"],
+    dataKey: ["title", "artist", "album", "genre", "url", "url_yt"],
   },
   log: {
     headers: ["Admin", "Action", "Target", "Timestamp"],
@@ -95,11 +95,11 @@ export async function handleUserInsert(
 }
 
 export async function handleSongInsert(
-formData: {title: string, artist:string, album: string, genre:string},
+formData: {title: string, artist:string, album: string, genre:string, url: string},
 setErrorMessage: React.Dispatch<React.SetStateAction<string>>
 ): Promise<void> {
   try {
-    const response = await fetch("api/auth/song", {
+    const response = await fetch("api/auth/songs", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(formData)

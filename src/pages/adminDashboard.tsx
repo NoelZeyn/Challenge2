@@ -56,6 +56,8 @@ const AdminDashboard: React.FC = () => {
     artist: string;
     album: string;
     genre: string;
+    url: string;
+    url_yt: string;
   }) => {
     handleSongInsert(formData, setErrorMessage).catch((error) => {
       console.error("Error inserting user:", error);
