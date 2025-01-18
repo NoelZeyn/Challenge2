@@ -23,14 +23,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { title, artist, album, genre, url, url_yt } = req.body;
 
       // Validasi input
-      if (!title || !artist || !album || !genre || !url || url_yt) {
+      if (!title || !artist || !album || !genre || !url || !url_yt) {
         return res.status(400).json({
           success: false,
-          message: "All fields (title, artist, album, genre, url) are required.",
+          message: "All fields (title, artist, album, genre, url, url_yt) are required.",
         });
       }
 
-      const { data, error } = await supabase.from("songs").insert([{ title, artist, album, genre, url, url_yt }]);
+      const { data, error } = await supabase
+        .from("songs")
+        .insert([{ title, artist, album, genre, url, url_yt }]);
 
       if (error) throw new Error(error.message);
 

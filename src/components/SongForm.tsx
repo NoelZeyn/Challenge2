@@ -3,11 +3,25 @@
 import React, { useState } from "react";
 
 type SongFormProps = {
-  onSubmit: (formData: { title: string; artist: string; album: string; genre: string, url: string, url_yt: string}) => void;
+  onSubmit: (formData: {
+    title: string;
+    artist: string;
+    album: string;
+    genre: string;
+    url: string;
+    url_yt: string;
+  }) => void;
 };
 
 const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({ title: "", artist: "", album: "", genre: "" , url: "", url_yt: ""});
+  const [formData, setFormData] = useState({
+    title: "",
+    artist: "",
+    album: "",
+    genre: "",
+    url: "",
+    url_yt: "",
+  });
   const [formError, setFormError] = useState("");
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,14 +34,24 @@ const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
 
     try {
       onSubmit(formData);
-      setFormData({ title: "", artist: "", album: "", genre: "", url: "", url_yt: ""}); // Clear the form
+      setFormData({
+        title: "",
+        artist: "",
+        album: "",
+        genre: "",
+        url: "",
+        url_yt: "",
+      }); // Clear the form
     } catch (error: any) {
       setFormError(error.message || "Failed to add song.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4 p-4 bg-gray-100 shadow-md rounded text-gray-700 ">
+    <form
+      onSubmit={handleSubmit}
+      className="mb-4 p-4 bg-gray-100 shadow-md rounded text-gray-700 "
+    >
       <h3 className="text-black text-lg font-bold mb-2">Add New User</h3>
       {formError && <p className="text-red-500 text-sm mb-2">{formError}</p>}
       <div className="grid grid-cols-1 sm:grid-cols-7 gap-4">
@@ -85,12 +109,12 @@ const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
           className="p-2 border rounded"
           required
         />
-      <button
-        type="submit"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        Add Song
-      </button>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Add Song
+        </button>
       </div>
     </form>
   );

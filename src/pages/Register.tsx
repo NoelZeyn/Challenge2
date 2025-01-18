@@ -1,5 +1,3 @@
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from "@/components/Navbar";
 import "../styles/globals.css";
 import RegisterForm from "@/components/RegisterForm";
