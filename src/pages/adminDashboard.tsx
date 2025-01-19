@@ -6,12 +6,12 @@ import Header from "@/components/HeaderAdmin";
 import UserForm from "@/components/UserForm";
 import SongForm from "@/components/SongForm";
 import {
-  validateAdminRole,
   fetchTabData,
   tableConfig,
   handleUserInsert,
   handleSongInsert,
-} from "@/utils/adminHelpers";
+} from "@/utils/dataHelpers";
+import {validateAdminRole} from "@/utils/validate";
 import "../styles/globals.css";
 
 const AdminDashboard: React.FC = () => {

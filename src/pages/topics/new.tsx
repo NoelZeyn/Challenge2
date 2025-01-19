@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useRouter } from "next/router";
+import "../../styles/globals.css"
 
 const NewTopic = () => {
   const [title, setTitle] = useState("");

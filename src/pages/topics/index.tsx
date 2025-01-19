@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-
+import "../../styles/globals.css"
 // Define types for topic data
 type Topic = {
   id: number;
