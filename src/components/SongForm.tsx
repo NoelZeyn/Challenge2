@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // components/SongForm.tsx
-import React, { useState } from "react";
+'use client';
+
+import React, { useState, useRef } from "react";
+import type { PutBlobResult } from "@vercel/blob";
 
 type SongFormProps = {
   onSubmit: (formData: {
@@ -10,6 +13,7 @@ type SongFormProps = {
     genre: string;
     url: string;
     url_yt: string;
+    audioUrl?: string;
   }) => void;
 };
 
@@ -22,18 +26,45 @@ const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
     url: "",
     url_yt: "",
   });
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const [formError, setFormError] = useState("");
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
 
+    let audioUrl = "";
+
+    if (inputFileRef.current?.files) {
+      const file = inputFileRef.current.files[0];
+
+      try {
+        const response = await fetch(`/api/upload?filename=${file.name}`, {
+          method: 'POST',
+          body: file,
+        });
+        
+
+        if (!response.ok) {
+          throw new Error("Failed to upload audio file.");
+        }
+
+        const newBlob = (await response.json()) as PutBlobResult;
+        audioUrl = newBlob.url;
+        setBlob(newBlob);
+      } catch (error: any) {
+        setFormError(error.message || "Failed to upload audio file.");
+        return;
+      }
+    }
+
     try {
-      onSubmit(formData);
+      onSubmit({ ...formData, audioUrl });
       setFormData({
         title: "",
         artist: "",
@@ -41,7 +72,8 @@ const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
         genre: "",
         url: "",
         url_yt: "",
-      }); // Clear the form
+      });
+      setBlob(null);
     } catch (error: any) {
       setFormError(error.message || "Failed to add song.");
     }
@@ -50,9 +82,9 @@ const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-4 p-4 bg-gray-100 shadow-md rounded text-gray-700 "
+      className="mb-4 p-4 bg-gray-100 shadow-md rounded text-gray-700"
     >
-      <h3 className="text-black text-lg font-bold mb-2">Add New User</h3>
+      <h3 className="text-black text-lg font-bold mb-2">Add New Song</h3>
       {formError && <p className="text-red-500 text-sm mb-2">{formError}</p>}
       <div className="grid grid-cols-1 sm:grid-cols-7 gap-4">
         <input
@@ -69,7 +101,7 @@ const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
           name="artist"
           value={formData.artist}
           onChange={handleFormChange}
-          placeholder="Artists"
+          placeholder="Artist"
           className="p-2 border rounded"
           required
         />
@@ -105,9 +137,16 @@ const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
           name="url_yt"
           value={formData.url_yt}
           onChange={handleFormChange}
-          placeholder="Link Youtube"
+          placeholder="Link YouTube"
           className="p-2 border rounded"
           required
+        />
+        <input
+          name="file"
+          ref={inputFileRef}
+          type="file"
+          accept="audio/*"
+          className="p-2 border rounded"
         />
         <button
           type="submit"
@@ -116,6 +155,11 @@ const SongForm: React.FC<SongFormProps> = ({ onSubmit }) => {
           Add Song
         </button>
       </div>
+      {blob && (
+        <div className="mt-4">
+          <p>Uploaded audio URL: <a href={blob.url} className="text-blue-500" target="_blank" rel="noopener noreferrer">{blob.url}</a></p>
+        </div>
+      )}
     </form>
   );
 };
