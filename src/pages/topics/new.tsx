@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useRouter } from "next/router";
-import "../../styles/globals.css"
+import { createTopic } from "@/utils/forumHelpers";
+import "../../styles/globals.css";
 
 const NewTopic = () => {
   const [title, setTitle] = useState("");
@@ -14,17 +15,7 @@ const NewTopic = () => {
     setErrorMessage("");
 
     try {
-      const response = await fetch("/api/auth/topics", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, userId: localStorage.getItem("userId") }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create topic.");
-      }
-
+      await createTopic(title, description);
       router.push("/topics");
     } catch (error: any) {
       setErrorMessage(error.message);

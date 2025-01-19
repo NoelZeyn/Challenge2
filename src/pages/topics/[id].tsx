@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import "../../styles/globals.css"
-// Define types for the data
+import { fetchTopicDetails, fetchComments, postComment } from "@/utils/forumHelpers";
+import "../../styles/globals.css";
+
 type Topic = {
   id: number;
   title: string;
@@ -26,39 +27,28 @@ const TopicDetails = () => {
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    const fetchTopic = async () => {
-      const response = await fetch(`/api/auth/topics/${id}`);
-      const result = await response.json();
-      setTopic(result.data);
+    if (!id) return;
+
+    const loadTopicAndComments = async () => {
+      const topicData = await fetchTopicDetails(id as string);
+      const commentsData = await fetchComments(id as string);
+      setTopic(topicData);
+      setComments(commentsData);
     };
 
-    const fetchComments = async () => {
-      const response = await fetch(`/api/auth/comments?topicId=${id}`);
-      const result = await response.json();
-      setComments(result.data);
-    };
-
-    if (id) {
-      fetchTopic();
-      fetchComments();
-    }
+    loadTopicAndComments();
   }, [id]);
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please log in to add a comment.");
+      return;
+    }
 
-    const response = await fetch("/api/auth/comments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        topicId: id,
-        content: newComment,
-        userId: localStorage.getItem("userId"),
-      }),
-    });
-
-    const result = await response.json();
-    setComments([...comments, result.data]);
+    const newCommentData = await postComment(id as string, newComment, userId);
+    setComments((prev) => [...prev, newCommentData]);
     setNewComment("");
   };
 

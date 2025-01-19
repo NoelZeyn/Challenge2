@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import {fetchTopics } from "@/utils/dataHelpers";
+import {fetchTopics } from "@/utils/forumHelpers";
 import { validateGeneralRole } from "@/utils/validate";
 import { TopicList } from "@/components/TopicList";
 import { Header } from "@/components/HeaderUser";

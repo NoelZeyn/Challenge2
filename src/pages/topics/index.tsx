@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import "../../styles/globals.css"
-// Define types for topic data
+import { fetchTopics } from "@/utils/forumHelpers"; // Import helper function
+
 type Topic = {
   id: number;
   title: string;
@@ -9,26 +9,20 @@ type Topic = {
 };
 
 const Topics = () => {
-  const [topics, setTopics] = useState<Topic[]>([]); // Explicitly define state type
+  const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        const response = await fetch("/api/auth/topics");
-        const result = await response.json();
-        setTopics(result.data || []); // Ensure topics is an array
-      } catch (error) {
-        console.error("Failed to fetch topics:", error);
-      } finally {
-        setLoading(false);
-      }
+    const loadTopics = async () => {
+      const data = await fetchTopics(); // Fetch topics using helper
+      setTopics(data); // Set fetched data
+      setLoading(false); // Stop loading indicator
     };
 
-    fetchTopics();
+    loadTopics();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>; // Show loading indicator
 
   return (
     <div className="container mx-auto p-6">
@@ -38,9 +32,9 @@ const Topics = () => {
           Create New Topic
         </button>
       </Link>
-      <ul className="mt-4">
+      <ul className="mt-4 space-y-4">
         {topics.map((topic) => (
-          <li key={topic.id} className="mb-4 border-b pb-4">
+          <li key={topic.id} className="p-4 border rounded shadow-sm">
             <h2 className="text-xl font-semibold">{topic.title}</h2>
             <p className="text-gray-600">{topic.description}</p>
             <Link href={`/topics/${topic.id}`}>

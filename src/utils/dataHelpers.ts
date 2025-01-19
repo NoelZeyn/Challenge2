@@ -77,14 +77,3 @@ export async function handleSongInsert(
   }
 }
 
-export async function fetchTopics(): Promise<any[]> {
-  try {
-    const response = await fetch("/api/auth/topics");
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Failed to fetch topics");
-    return result.data || [];
-  } catch (error) {
-    console.error("Failed to fetch topics:", error);
-    return [];
-  }
-}
