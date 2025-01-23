@@ -60,8 +60,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
+    case "GET": {
+      try {
+        const { data, error } = await supabase.from("users").select("id, username, role").eq("id", id).single();
+  
+        if (error) throw new Error(error.message);
+  
+        return res.status(200).json({ success: true, data });
+      } catch (error) {
+        return res.status(500).json({ success: false, message: error instanceof Error ? error.message : "Unknown error" });
+      }
+    }
+
     default: {
-      res.setHeader("Allow", ["PUT", "DELETE"]);
+      res.setHeader("Allow", ["PUT", "DELETE", "GET"]);
       return res.status(405).json({ success: false, message: `Method ${req.method} not allowed` });
     }
   }

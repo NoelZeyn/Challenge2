@@ -19,16 +19,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       // Log query ke database
-      console.log("Querying database for userId:", userId);
+      // console.log("Querying database for userId:", userId);
 
       const { data: userData, error } = await supabase
         .from("users")
-        .select("role")
+        .select("username,role")
         .eq("id", userId)
         .single();
 
       // Log hasil query
-      console.log("Query result:", userData, error);
+      // console.log("Query result:", userData, error);
 
       if (error || !userData) {
         console.error("User not found or query error:", error);
@@ -42,6 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         success: true,
         role: userData.role,
       });
+      // console.log(res)
     } catch (error: any) {
       // Log error server
       console.error("Unexpected server error:", error.message);

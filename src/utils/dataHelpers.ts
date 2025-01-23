@@ -44,7 +44,7 @@ export async function handleUserInsert(
     const adminId = localStorage.getItem("userId");
     if (!adminId) throw new Error("Admin ID is missing!");
 
-    const response = await fetch("/api/auth/register", {
+    const response = await fetch("/api/auth/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),

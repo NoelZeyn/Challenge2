@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         try {
             const { data, error } = await supabase
                 .from("topics")
-                .select("*")
+                .select("id, title, description, created_at, created_by, users(username, role)")
                 .eq("id", id)
                 .single();
 

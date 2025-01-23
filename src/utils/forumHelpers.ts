@@ -80,29 +80,42 @@ export const createTopic = async (title: string, description: string): Promise<v
       throw error;
     }
   };
+
+  export const likeComment = async (commentId: number) => {
+    try {
+      const response = await fetch(`/api/auth/comments/${commentId}`, {
+        method: "POST",
+      });
   
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to like the comment");
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error("Error liking the comment:", error);
+      throw error;
+    }
+  };
+    export const getlikeComment = async (commentId: number) => {
+      try {
+        const response = await fetch(`/api/auth/comments/${commentId}`, {
+          method: "GET",
+        });
+    
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to fetch the comment");
+        }
+    
+        const result = await response.json();
+        return result.likes !== undefined ? result : { likes: 0 };
+      } catch (error) {
+        console.error("Error fetching the like count:", error);
+        throw error;
+      }
+    };
 
-//     const [errorMessage, setErrorMessage] = useState("");
-//   const router = useRouter();
 
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     setErrorMessage("");
-
-//     try {
-//       const response = await fetch("/api/auth/topics", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ title, description, userId: localStorage.getItem("userId") }),
-//       });
-
-//       if (!response.ok) {
-//         const errorData = await response.json();
-//         throw new Error(errorData.message || "Failed to create topic.");
-//       }
-
-//       router.push("/topics");
-//     } catch (error: any) {
-//       setErrorMessage(error.message);
-//     }
-//   };
+    
