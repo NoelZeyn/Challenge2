@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { fetchTopics } from "@/utils/forumHelpers"; // Import helper function
+import "../../styles/globals.css"
 
 type Topic = {
   id: number;
@@ -37,9 +38,9 @@ const Topics = () => {
           <li key={topic.id} className="p-4 border rounded shadow-sm">
             <h2 className="text-xl font-semibold">{topic.title}</h2>
             <p className="text-gray-600">{topic.description}</p>
-            <Link href={`/topics/${topic.id}`}>
+            <a href={`/topics/${topic.id}`}>
               <a className="text-blue-500 hover:underline">View Topic</a>
-            </Link>
+            </a>
           </li>
         ))}
       </ul>

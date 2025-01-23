@@ -2,11 +2,18 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchUser, User } from "@/utils/validate";
 import { search, SearchResult } from "@/utils/forumHelpers";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [query, setQuery] = useState(""); // State untuk input pencarian
   const [results, setResults] = useState<SearchResult[]>([]); // State untuk hasil pencarian
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    router.push("/Login");
+  };
 
   useEffect(() => {
     const loadUser = async () => {
@@ -26,7 +33,9 @@ export default function Navbar() {
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <div className="flex items-center">
-          <h1 className="text-xl font-bold text-teal-500">CalmTunes</h1>
+          <Link href="/" className="text-xl font-bold text-teal-500">
+            CalmTunes
+          </Link>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -73,7 +82,10 @@ export default function Navbar() {
           )}
 
           {/* Ikon Notifikasi */}
-          <Link href="/notifications" className="hover:text-teal-500 transition-colors">
+          <Link
+            href="/notifications"
+            className="hover:text-teal-500 transition-colors"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-6 h-6 text-gray-600"
@@ -90,7 +102,6 @@ export default function Navbar() {
             </svg>
           </Link>
 
-          {/* Jika user tersedia, tampilkan detail user */}
           {user ? (
             <Link
               href="/profile"
@@ -102,7 +113,9 @@ export default function Navbar() {
                 className="w-8 h-8 rounded-full"
               />
               <div>
-                <span className="block text-sm font-medium text-gray-700">{user.username}</span>
+                <span className="block text-sm font-medium text-gray-700">
+                  {user.username}
+                </span>
                 <span className="block text-xs text-gray-500">{user.role}</span>
               </div>
             </Link>
@@ -114,6 +127,12 @@ export default function Navbar() {
               Sign In
             </Link>
           )}
+          <button
+            onClick={handleLogout}
+            className="mt-4 lg:mt-0 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </nav>
