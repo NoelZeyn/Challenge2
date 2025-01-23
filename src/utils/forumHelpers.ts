@@ -117,5 +117,34 @@ export const createTopic = async (title: string, description: string): Promise<v
       }
     };
 
+    export type SearchResult = {
+      id: string;
+      title: string;
+      description: string;
+    };
+    
+    export async function search(query: string): Promise<SearchResult[]> {
+      if (!query.trim()) return []; // Jika query kosong, kembalikan array kosong
+    
+      try {
+        const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+    
+        if (!response.ok) {
+          throw new Error("Failed to fetch search results");
+        }
+    
+        const { success, data } = await response.json();
+    
+        if (success && data) {
+          return data; // Kembalikan hasil pencarian
+        }
+    
+        return [];
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        return [];
+      }
+    }
+    
 
     

@@ -1,19 +1,26 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchUser, User } from "@/utils/validate";
+import { search, SearchResult } from "@/utils/forumHelpers";
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
+  const [query, setQuery] = useState(""); // State untuk input pencarian
+  const [results, setResults] = useState<SearchResult[]>([]); // State untuk hasil pencarian
 
   useEffect(() => {
     const loadUser = async () => {
-      const userData = await fetchUser(); // Panggil fungsi fetchUser dari file utility
-      setUser(userData); // Set user dari hasil fetch
+      const userData = await fetchUser();
+      setUser(userData);
     };
 
     loadUser();
   }, []);
+
+  const handleSearch = async () => {
+    const searchResults = await search(query); // Panggil fungsi pencarian dari file utility
+    setResults(searchResults); // Set hasil pencarian ke state
+  };
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -28,29 +35,45 @@ export default function Navbar() {
             <input
               type="text"
               placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)} // Perbarui query berdasarkan input pengguna
               className="pl-4 pr-8 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4 absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <button
+              onClick={handleSearch}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-teal-500"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M8 4v16m8-16v16M3 8h18M3 16h18"
-              />
-            </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M8 4v16m8-16v16M3 8h18M3 16h18"
+                />
+              </svg>
+            </button>
           </div>
 
+          {/* Hasil Pencarian */}
+          {results.length > 0 && (
+            <div className="absolute bg-white border rounded-md mt-2 p-2 w-80 shadow-lg">
+              {results.map((result) => (
+                <div key={result.id} className="p-2 hover:bg-gray-100">
+                  <h3 className="font-semibold">{result.title}</h3>
+                  <p className="text-sm text-gray-600">{result.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Ikon Notifikasi */}
-          <Link
-            href="/notifications"
-            className="hover:text-teal-500 transition-colors"
-          >
+          <Link href="/notifications" className="hover:text-teal-500 transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-6 h-6 text-gray-600"
@@ -79,9 +102,7 @@ export default function Navbar() {
                 className="w-8 h-8 rounded-full"
               />
               <div>
-                <span className="block text-sm font-medium text-gray-700">
-                  {user.username}
-                </span>
+                <span className="block text-sm font-medium text-gray-700">{user.username}</span>
                 <span className="block text-xs text-gray-500">{user.role}</span>
               </div>
             </Link>

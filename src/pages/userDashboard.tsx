@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import {fetchTopics } from "@/utils/forumHelpers";
+import { fetchTopics } from "@/utils/forumHelpers";
 import { validateGeneralRole } from "@/utils/validate";
 import { TopicList } from "@/components/TopicList";
 import { Header } from "@/components/HeaderUser";
-import "../styles/globals.css"
+import NavbarUser from "@/components/NavbarUser";
+
+import "../styles/globals.css";
 type Topic = {
   id: number;
   title: string;
@@ -41,10 +43,13 @@ export default function UserDashboard() {
   if (errorMessage) return <p>{errorMessage}</p>;
 
   return (
-    <div className="min-h-screen text-black mx-auto p-6 bg-gradient-to-b from-teal-100 via-blue-50 to-blue-100">
-      <Header />
-      <h2 className="text-2xl font-semibold mt-6 mb-4">Available Topics</h2>
-      <TopicList topics={topics} />
+    <div>
+      <NavbarUser />
+      <div className="min-h-screen text-black mx-auto p-6 bg-gradient-to-b from-teal-100 via-blue-50 to-blue-100">
+        <Header />
+        <h2 className="text-2xl font-semibold mt-6 mb-4">Available Topics</h2>
+        <TopicList topics={topics} />
+      </div>
     </div>
   );
 }
