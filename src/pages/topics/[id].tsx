@@ -106,7 +106,7 @@ const TopicDetails = () => {
               ></textarea>
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="inline-block bg-blue-500 text-white py-2 px-6 rounded shadow-md hover:bg-blue-600 hover:shadow-lg transform hover:scale-105 transition-all duration-300"
               >
                 Submit
               </button>
@@ -122,9 +122,19 @@ const TopicDetails = () => {
             >
               <div className="flex items-center mb-3">
                 <div>
-                  <h4 className="font-semibold text-gray-800">
-                    {comment.users.username} ({comment.users.role})
+                  <h4 className="font-semibold text-gray-800 flex items-center space-x-2">
+                    <span>{comment.users.username}</span>
+                    <span
+                      className={`px-2 py-1 text-xs font-bold rounded-full ${
+                        comment.users.role === "general"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-blue-100 text-blue-700"
+                      }`}
+                    >
+                      {comment.users.role}
+                    </span>
                   </h4>
+
                   <p className="text-xs text-gray-500">1 hour ago</p>
                 </div>
               </div>
